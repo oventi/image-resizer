@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        
+        <style>
+        #message { 
+            background: #BDE5F8; 
+            font-weight: bold; 
+            border-radius: 10px;
+            padding: 1%;
+            width: 50%;
+            display: none;
+        }
+        .done {
+            background: #DFF2BF !important;
+        }
+        img { margin: 1%; }
+        </style>
+        
+        <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="image-resizer.js"></script>
+        <title>ImageResizer</title>
+    </head>
+    <body>
+        <h1>ImageResizer example</h1>
+        <p>
+            <strong>select files</strong> 
+            <input id="imageList" type="file" multiple> 
+            <button onclick="resize_images()">resize images</button>
+        </p>
+        <hr />
+        <div id="message"></div>
+        <div id="result"></div>
+        <script>
+        function resize_images() {
+            var i = 0;
+            var d = false;
+            var fileList = document.getElementById("imageList").files;
+            var container = document.querySelector("#result");
+            
+            $("#message").show();
+            $("#message").text("Resizing...");
+            
+            while(i < fileList.length) {
+                var file = fileList[i];
+                
+                var ir = new ImageResizer(file, 0.15);
+                ir.resize(function (data_url) {
+                    var img = document.createElement("img");
+                    img.src = data_url;
+                    container.appendChild(img);
+                    
+                    if(!d && i === fileList.length) {
+                        $("#message").addClass("done");
+                        $("#message").text("Resizing... Done");
+                        d = true;
+                    }
+                });
+                
+                i++;
+            }
+        }
+        </script>
+    </body>
+</html>
