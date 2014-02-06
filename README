@@ -1,0 +1,6 @@
+image-resizer
+
+image-resizer is a javascript library that resizes images on the client side.
+
+the idea with this code was an experimentation with the canvas element and file reader of HTML5.
+
