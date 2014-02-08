@@ -1,9 +1,14 @@
-function ImageResizer(file, resize_factor) {
+function ImageResizer(file, factor) {
     var self = this;
     self.file = file;
     var steps = [0.5, 0.25, 0.125];
     this.fname = file.name;
-
+    resize_factor = 0;
+    
+    if(factor.r) {
+        resize_factor = factor.r;
+    }
+    
     var resize_image = function (loop, count, factor, when_done) {
         var w = self.image.width;
         var h = self.image.height;
@@ -56,6 +61,9 @@ function ImageResizer(file, resize_factor) {
             var image = new Image();
             image.onload = function () {
                 self.image = this;
+                if(factor.w) {
+                    resize_factor = factor.w / self.image.width;
+                }
                 
                 start_resizing(function () {
                     resize_done(self.image.src);

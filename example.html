@@ -46,7 +46,7 @@
             while(i < fileList.length) {
                 var file = fileList[i];
                 
-                var ir = new ImageResizer(file, 0.15);
+                var ir = new ImageResizer(file, {r: 0.5, w: 300});
                 ir.resize(function (data_url) {
                     var img = document.createElement("img");
                     img.src = data_url;
