@@ -2,7 +2,6 @@ function ImageResizer(file, factor) {
     var self = this;
     self.file = file;
     var steps = [0.5, 0.25, 0.125];
-    this.fname = file.name;
     resize_factor = 0;
     
     if(factor.r) {
@@ -72,5 +71,13 @@ function ImageResizer(file, factor) {
             image.src = self.data_url;
         }
         fr.readAsDataURL(self.file);
+    }
+    
+    this.resize_post = function (url, resize_done) {
+        this.resize(function () {
+            $.post(url, {name: self.file.name, data: self.image.src}, function (response) {
+                resize_done(response);
+            }, 'json');
+        });
     }
 }
