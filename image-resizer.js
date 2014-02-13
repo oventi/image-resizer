@@ -7,8 +7,8 @@ function ImageResizer(file, factor) {
     var steps = [0.5, 0.25, 0.125];
     resize_factor = 0;
     
-    if(factor.r) {
-        resize_factor = factor.r;
+    if(factor < 1) {
+        resize_factor = factor;
     }
     
     var resize_image = function (loop, count, factor, when_done) {
@@ -63,8 +63,8 @@ function ImageResizer(file, factor) {
             var image = new Image();
             image.onload = function () {
                 self.image = this;
-                if(factor.w) {
-                    resize_factor = factor.w / self.image.width;
+                if(factor > 1) {
+                    resize_factor = factor / self.image.width;
                 }
                 
                 start_resizing(function () {

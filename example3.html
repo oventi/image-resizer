@@ -46,7 +46,7 @@
             while(i < fileList.length) {
                 var file = fileList[i];
                 
-                var ir = new ImageResizer(file, {r: 0.5, w: 640});
+                var ir = new ImageResizer(file, 640);
                 //ir.resize_save_path = "../image-resizer.php"; // default post path
                 //ir.save_folder = "result"; // default save folder
                 ir.resize_save_path = "image-resizer.php";
