@@ -1,4 +1,7 @@
 function ImageResizer(file, factor) {
+    this.resize_save_path = "../image-resizer.php";
+    this.save_folder = "result";
+    
     var self = this;
     self.file = file;
     var steps = [0.5, 0.25, 0.125];
@@ -76,6 +79,15 @@ function ImageResizer(file, factor) {
     this.resize_post = function (url, resize_done) {
         this.resize(function () {
             $.post(url, {name: self.file.name, data: self.image.src}, function (response) {
+                resize_done(response);
+            }, 'json');
+        });
+    }
+    
+    this.resize_save = function (resize_done) {
+        this.resize(function () {
+            var data = {ir_name: self.file.name, ir_data: self.image.src, ir_folder: self.save_folder};
+            $.post(self.resize_save_path, data, function (response) {
                 resize_done(response);
             }, 'json');
         });
