@@ -76,14 +76,6 @@ function ImageResizer(file, factor) {
         fr.readAsDataURL(self.file);
     }
     
-    this.resize_post = function (url, resize_done) {
-        this.resize(function () {
-            $.post(url, {name: self.file.name, data: self.image.src}, function (response) {
-                resize_done(response);
-            }, 'json');
-        });
-    }
-    
     this.resize_save = function (resize_done) {
         this.resize(function () {
             var data = {ir_name: self.file.name, ir_data: self.image.src, ir_folder: self.save_folder};

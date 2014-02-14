@@ -13,54 +13,101 @@
             width: 50%;
             display: none;
         }
+        #result {
+            margin-top: 2%;
+        }
         .done {
             background: #DFF2BF !important;
         }
         img { margin: 1%; }
+        a.see-resized {
+            background: #DFF2BF; 
+            font-weight: bold; 
+            border-radius: 10px;
+            padding: 1%;
+            text-decoration: none;
+            color: #000;
+        }
         </style>
         
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="image-resizer.js"></script>
-        <title>ImageResizer</title>
+        <title>ImageResizer examples</title>
     </head>
     <body>
-        <h1>ImageResizer example</h1>
+        <h1>ImageResizer examples</h1>
         <p>
             <strong>select files</strong> 
-            <input id="imageList" type="file" multiple> 
-            <button onclick="resize_images()">resize images</button>
+            <input id="image_list" type="file" multiple><br />
+            <button onclick="ir_resize()">resize</button> | resize to width 400<br />
+            <button onclick="ir_resize_save()">resize and save</button> | resize to 25% and save to a folder<br />
+            <button onclick="ir_reset()">reset</button><br /><br />
+            
+            <button onclick="ir_test()">test</button>
         </p>
+        
         <hr />
+        
         <div id="message"></div>
         <div id="result"></div>
+        
         <script>
-        function resize_images() {
-            var i = 0;
-            var d = false;
-            var fileList = document.getElementById("imageList").files;
-            var container = document.querySelector("#result");
-            
-            $("#message").show();
+        function ir_resize() {
+            ir_reset();
             $("#message").text("Resizing...");
+            $("#message").show();
             
-            while(i < fileList.length) {
-                var file = fileList[i];
-                
-                var ir = new ImageResizer(file, {r: 0.5, w: 300});
-                ir.resize(function (data_url) {
-                    var img = document.createElement("img");
-                    img.src = data_url;
-                    container.appendChild(img);
-                    
-                    if(!d && i === fileList.length) {
-                        $("#message").addClass("done");
-                        $("#message").text("Resizing... Done");
-                        d = true;
-                    }
-                });
-                
-                i++;
+            var i = 0;
+            var j = 0;
+            var file_list = $("#image_list")[0].files;
+            var container = $("#result");
+            if(file_list.length > 0) {
+                while(i < file_list.length) {
+                    var file = file_list[i];
+                    var ir = new ImageResizer(file, 400);
+                    ir.resize(function (data_url) {
+                        var img = document.createElement("img");
+                        img.src = data_url;
+                        container.append(img);
+                        
+                        if(j == file_list.length - 1) { $("#message").fadeOut('slow'); }
+                        j++;
+                    });
+                    i++;
+                }
             }
+        }
+        
+        function ir_resize_save() {
+            ir_reset()
+            $("#message").text("Resizing and saving...");
+            $("#message").show();
+            
+            var i = 0;
+            var j = 0;
+            var file_list = $("#image_list")[0].files;
+            var container = $("#result");
+            if(file_list.length > 0) {
+                while(i < file_list.length) {
+                    var file = file_list[i];
+                    var ir = new ImageResizer(file, 0.25);
+                    ir.resize_save_path = "image-resizer.php";
+                    ir.resize_save(function (resize_ok) {
+                        if(resize_ok && j == file_list.length - 1) {
+                            $("#message").fadeOut('slow');
+                            var link = $('<a class="see-resized">See resized images</a>');
+                            link.attr("href", "./result");
+                            $("#result").append(link);
+                        }
+                        j++;
+                    });
+                    i++;
+                }
+            }
+        }
+        
+        function ir_reset() {
+            $("#result").empty();
         }
         </script>
     </body>
