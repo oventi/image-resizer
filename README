@@ -1,16 +1,29 @@
 image-resizer
 
-image-resizer is a javascript library that resizes images on the client side.
+image-resizer is a javascript library that resizes images on the client side, 
+and optional server side image saving.
 
-the idea with this code was an experimentation with the canvas element and file reader of HTML5.
+the idea with this code was an experimentation with the canvas element and file reader of HTML5
 
 * Example
 
 // file: object of type File
 // https://developer.mozilla.org/en-US/docs/Web/API/File
 
-var ir = new ImageResizer(file, {r: 0.5, w: 300});
+/* 
+ * if the number > 1, it is used as fixed width
+ * if the number < 1, it is used as percentage
+ */
+var ir = new ImageResizer(file, 640); 
+
+// resize on the client side, return the data URL
 ir.resize(function (data_url) {
     // data_url is the data URI of the resized image
     // https://developer.mozilla.org/en/docs/data_URIs
+});
+
+// resize on the client side, post and save the resized image
+// a folder named result should be on the same directory as the script
+ir.resize_save(function (ok) {
+    // ok is binary, it tells you if the resize and save was done
 });

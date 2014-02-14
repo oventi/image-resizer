@@ -43,7 +43,7 @@
             <button onclick="ir_resize_save()">resize and save</button> | resize to 25% and save to a folder<br />
             <button onclick="ir_reset()">reset</button><br /><br />
             
-            <button onclick="ir_test()">test</button>
+            <!--button onclick="ir_test()">test</button-->
         </p>
         
         <hr />
@@ -86,14 +86,13 @@
             var i = 0;
             var j = 0;
             var file_list = $("#image_list")[0].files;
-            var container = $("#result");
             if(file_list.length > 0) {
                 while(i < file_list.length) {
                     var file = file_list[i];
                     var ir = new ImageResizer(file, 0.25);
                     ir.resize_save_path = "image-resizer.php";
-                    ir.resize_save(function (resize_ok) {
-                        if(resize_ok && j == file_list.length - 1) {
+                    ir.resize_save(function (ok) {
+                        if(ok && j == file_list.length - 1) {
                             $("#message").fadeOut('slow');
                             var link = $('<a class="see-resized">See resized images</a>');
                             link.attr("href", "./result");
