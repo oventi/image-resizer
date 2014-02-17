@@ -10,7 +10,7 @@ there are two objects: Resizer and Resized
 Resizer: resizes an image
     methods 
         resize(file, resize_factor, resize_done);
-            file: file: object of type File, https://developer.mozilla.org/en-US/docs/Web/API/File
+            file: file: object of type File, http://mzl.la/1nFeQFb
             resize_factor: a number greater than 0
                 if > 1, file will be resized to a fixed width
                 if < 1, file will be resized by percentage
