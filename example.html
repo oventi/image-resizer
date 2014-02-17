@@ -1,112 +1,84 @@
+<!--
+This file is part of image-resizer.
+
+image-resizer is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+image-resizer is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with image-resizer.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
 <!DOCTYPE html>
 
 <html>
     <head>
         <meta charset="UTF-8">
         
-        <style>
-        #message { 
-            background: #BDE5F8; 
-            font-weight: bold; 
-            border-radius: 10px;
-            padding: 1%;
-            width: 50%;
-            display: none;
-        }
-        #result {
-            margin-top: 2%;
-        }
-        .done {
-            background: #DFF2BF !important;
-        }
-        img { margin: 1%; }
-        a.see-resized {
-            background: #DFF2BF; 
-            font-weight: bold; 
-            border-radius: 10px;
-            padding: 1%;
-            text-decoration: none;
-            color: #000;
-        }
-        </style>
-        
         <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-        <script src="image-resizer.js"></script>
+        <script src="image-resizer2.js"></script>
+        
         <title>ImageResizer examples</title>
     </head>
     <body>
         <h1>ImageResizer examples</h1>
+        
+        <h2>select file</h2>
+        <input id="image_list" type="file">
+        
         <p>
-            <strong>select files</strong> 
-            <input id="image_list" type="file" multiple><br />
-            <button onclick="ir_resize()">resize</button> | resize to width 400<br />
-            <button onclick="ir_resize_save()">resize and save</button> | resize to 25% and save to a folder<br />
-            <button onclick="ir_reset()">reset</button><br /><br />
-            
-            <!--button onclick="ir_test()">test</button-->
+            resize (width = 400 px) and display in browser | 
+            <button onclick="example1()">go</button>
+        </p>
+        
+        <p>
+            resize (width = 25%) and save to server | 
+            <button onclick="example2()">go</button>
         </p>
         
         <hr />
         
-        <div id="message"></div>
-        <div id="result"></div>
+        <div id="images"></div>
         
         <script>
-        function ir_resize() {
-            ir_reset();
-            $("#message").text("Resizing...");
-            $("#message").show();
+        function example1() {
+            var files = $("#image_list")[0].files;
+            var container = $("#images").empty();
             
-            var i = 0;
-            var j = 0;
-            var file_list = $("#image_list")[0].files;
-            var container = $("#result");
-            if(file_list.length > 0) {
-                while(i < file_list.length) {
-                    var file = file_list[i];
-                    var ir = new ImageResizer(file, 400);
-                    ir.resize(function (data_url) {
-                        var img = document.createElement("img");
-                        img.src = data_url;
-                        container.append(img);
-                        
-                        if(j == file_list.length - 1) { $("#message").fadeOut('slow'); }
-                        j++;
-                    });
-                    i++;
-                }
-            }
+            var resizer = new oventi.ImageResizer.Resizer();
+            resizer.resize(files[0], 400, function (resized) {
+                var img = document.createElement("img");
+                img.src = resized.get_url();
+                container.append(img);
+            });
         }
         
-        function ir_resize_save() {
-            ir_reset()
-            $("#message").text("Resizing and saving...");
-            $("#message").show();
+        function example2() {
+            var files = $("#image_list")[0].files;
+            var container = $("#images").empty();
             
-            var i = 0;
-            var j = 0;
-            var file_list = $("#image_list")[0].files;
-            if(file_list.length > 0) {
-                while(i < file_list.length) {
-                    var file = file_list[i];
-                    var ir = new ImageResizer(file, 0.25);
-                    ir.resize_save_path = "image-resizer.php";
-                    ir.resize_save(function (ok) {
-                        if(ok && j == file_list.length - 1) {
-                            $("#message").fadeOut('slow');
-                            var link = $('<a class="see-resized">See resized images</a>');
-                            link.attr("href", "./result");
-                            $("#result").append(link);
-                        }
-                        j++;
-                    });
-                    i++;
-                }
-            }
-        }
-        
-        function ir_reset() {
-            $("#result").empty();
+            var resizer = new oventi.ImageResizer.Resizer();
+            container.append("resizing...")
+            resizer.resize(files[0], 0.25, function (resized) {
+                container.append("DONE");
+                container.append($("<br />"));
+                container.append("saving...");
+                resized.save_path = "./images";
+                resized.save(function (response) {
+                    if(response.ok) {
+                        container.append("DONE");
+                    }
+                    else {
+                        container.append("ERROR");
+                    }
+                });
+            });
         }
         </script>
     </body>

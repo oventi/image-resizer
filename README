@@ -1,29 +1,33 @@
 image-resizer
 
 image-resizer is a javascript library that resizes images on the client side, 
-and optional server side image saving.
+and optionally saves them on the server.
 
 the idea with this code was an experimentation with the canvas element and file reader of HTML5
 
-* Example
+there are two objects: Resizer and Resized
 
-// file: object of type File
-// https://developer.mozilla.org/en-US/docs/Web/API/File
+Resizer: resizes an image
+    methods 
+        resize(file, resize_factor, resize_done);
+            file: file: object of type File, https://developer.mozilla.org/en-US/docs/Web/API/File
+            resize_factor: a number greater than 0
+                if > 1, file will be resized to a fixed width
+                if < 1, file will be resized by percentage
+            resize_done: callback function after the resize is done
+                that function will be sent a parameter of type Resized
 
-/* 
- * if the number > 1, it is used as fixed width
- * if the number < 1, it is used as percentage
- */
-var ir = new ImageResizer(file, 640); 
+Resized: the resized image provided by Resizer
+    attributes
+        save_path: the folder to save the images, by default is the current folder
+        
+        post_url: the file or path to do the http post, by default is the included image-resizer.php
+        
+    methods
+        get_url: gets the data url of the resized image
 
-// resize on the client side, return the data URL
-ir.resize(function (data_url) {
-    // data_url is the data URI of the resized image
-    // https://developer.mozilla.org/en/docs/data_URIs
-});
-
-// resize on the client side, post and save the resized image
-// a folder named result should be on the same directory as the script
-ir.resize_save(function (ok) {
-    // ok is binary, it tells you if the resize and save was done
-});
+        save(save_done): saves the image
+            save_done: callback function after the save is done
+                that function will receive an object with these properties:
+                    ok: boolean, if the saving went ok
+                    file_name: the name of the saved file
